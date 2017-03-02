@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -105,14 +106,6 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-//        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-//                mRootView.findViewById(R.id.draw_insets_frame_layout);
-//        mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-//            @Override
-//            public void onInsetsChanged(Rect insets) {
-//                mTopInset = insets.top;
-//            }
-//        });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 //        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
@@ -131,10 +124,19 @@ public class ArticleDetailFragment extends Fragment implements
 
         Toolbar supportActionBar = (Toolbar)mRootView.findViewById(R.id.toolbar);
 
+
         AppCompatActivity acty = (AppCompatActivity)getActivity();
         acty.setSupportActionBar(supportActionBar);
+        acty.getSupportActionBar().setHomeButtonEnabled(true);
         acty.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         acty.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        supportActionBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavUtils.navigateUpFromSameTask(getActivity());
+            }
+        });
 
 
 

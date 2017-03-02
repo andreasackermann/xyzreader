@@ -12,12 +12,11 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp" ><!--todo wrap_content-->
+        android:layout_height="wrap_content" ><!--todo wrap_content-->
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll"
-            >
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll">
 
             <!--<FrameLayout-->
                 <!--android:id="@+id/photo_container"-->
@@ -29,9 +28,10 @@
                 <ImageView
                     android:id="@+id/photo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/detail_photo_height"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
+
                     />
 
                 <!--<View-->
@@ -49,7 +49,14 @@
         android:id="@+id/scrollview"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        android:layout_marginTop="@dimen/overlap_top"
+        android:elevation="4dp"
+
+
+
+        ><!--app:behavior_overlapTop="300dp"--><!---->
 
 
         <!--<FrameLayout-->
@@ -65,8 +72,7 @@
                 android:layout_gravity="center_horizontal"
                 android:maxWidth="@dimen/detail_card_max_width"
                 android:background="#fff"
-                android:elevation="2dp"
-                ><!--android:layout_marginTop="@dimen/detail_card_top_margin"-->
+                android:elevation="2dp">
 
                 <LinearLayout
                     android:id="@+id/meta_bar"
