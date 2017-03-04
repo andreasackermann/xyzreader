@@ -41,7 +41,7 @@
 
             <!--</FrameLayout>-->
 
-            <include layout="@layout/toolbar"></include>
+            <include layout="@layout/toolbar_detail"></include>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
