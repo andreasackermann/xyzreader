@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
@@ -139,16 +141,18 @@ public class ArticleDetailFragment extends Fragment implements
         acty.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         acty.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        final String transitionName = getResources().getString(R.string.transition_image, mItemId);
         supportActionBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // todo pass current image back to list?
+                getActivity().setResult(Activity.RESULT_OK,new Intent(transitionName));
+                ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), null, transitionName);
                 getActivity().onBackPressed();
             }
         });
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            String transitionName = getResources().getString(R.string.transition_image, mItemId);
             Log.d("grmblpfmf2", transitionName);
             ViewCompat.setTransitionName(mPhotoView, transitionName);
 

@@ -42,6 +42,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private String mTransitionName;
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,6 +151,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     String transitionName = getResources().getString(
                             R.string.transition_image,
                             getItemId(vh.getAdapterPosition()));
+
                     Log.d("grmblpfmf1", transitionName);
 
                     Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
@@ -159,17 +161,20 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                             .toBundle();
 
+                    //int result = -1;
+                    startActivityForResult(
 
-                    startActivity(
                             new Intent(
                                     Intent.ACTION_VIEW,
                                     ItemsContract.Items.buildItemUri(
                                             getItemId(vh.getAdapterPosition()))),
-                                            bundle);
+                            1,
+                                                bundle);
                 }
             });
             return vh;
         }
+
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
@@ -192,6 +197,17 @@ public class ArticleListActivity extends AppCompatActivity implements
         public int getItemCount() {
             return mCursor.getCount();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Log.d("grmblpfmf4", data.getAction());
+            mTransitionName = data.getAction();
+        }
+
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
