@@ -146,8 +146,10 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onClick(View view) {
                 // todo pass current image back to list?
-                getActivity().setResult(Activity.RESULT_OK,new Intent(transitionName));
-                ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), null, transitionName);
+                Intent intent = new Intent();
+                intent.putExtra("isReturning", true);
+                intent.putExtra("transitionName", transitionName);
+                getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().onBackPressed();
             }
         });

@@ -9,17 +9,14 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +26,9 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -42,12 +42,20 @@ public class ArticleListActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private String mTransitionName;
+    private boolean mIsReturning = false;
+    private String mRcvTransitionName = null;
+    private String mSentTransitionName = null;
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        return super.onCreateOptionsMenu(menu);
-//    }
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        Log.d("grmblfpfmf9", "reenter");
+        if (resultCode == RESULT_OK) {
+            mIsReturning = data.getBooleanExtra("isReturning", false);
+            mRcvTransitionName = data.getStringExtra("transitionName");
+            Log.d("grmblpfmf8", "onActivityReenter: mIsReturning=" + mIsReturning + " ,mRcvTransitionName=" + mRcvTransitionName);
+        }
+        super.onActivityReenter(resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,23 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             refresh();
         }
+
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                Log.d("grmblpfmf7", "mIsReturning=" + mIsReturning + " ,mRcvTransitionName=" + mRcvTransitionName + " ,mSentTransitionName=" + mSentTransitionName);
+                if (mIsReturning) {
+                    mIsReturning = false;
+                    if (mRcvTransitionName != null && !mRcvTransitionName.equals(mSentTransitionName)) {
+                        names.clear();
+                        sharedElements.clear();
+                        Log.d("grmblpfmf6", "mRcvTransitionName=" + mRcvTransitionName + " ,mSentTransitionName=" + mSentTransitionName + " do not match");
+                        mRcvTransitionName = null;
+                    }
+                }
+
+            }
+        });
     }
 
     private void refresh() {
@@ -99,12 +124,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("grmblpfmf3", "alkdaklfj");
     }
 
     @Override
@@ -151,7 +170,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     String transitionName = getResources().getString(
                             R.string.transition_image,
                             getItemId(vh.getAdapterPosition()));
-
+                    mSentTransitionName = transitionName;
                     Log.d("grmblpfmf1", transitionName);
 
                     Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
@@ -161,7 +180,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                             .toBundle();
 
-                    //int result = -1;
                     startActivityForResult(
 
                             new Intent(
@@ -197,17 +215,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         public int getItemCount() {
             return mCursor.getCount();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            Log.d("grmblpfmf4", data.getAction());
-            mTransitionName = data.getAction();
-        }
-
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
