@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
@@ -98,6 +101,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("grmblpfmf3", "alkdaklfj");
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newAllArticlesInstance(this);
     }
@@ -138,8 +147,25 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    String transitionName = getResources().getString(
+                            R.string.transition_image,
+                            getItemId(vh.getAdapterPosition()));
+                    Log.d("grmblpfmf1", transitionName);
+
+                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
+                            (ArticleListActivity.this,
+                                    (ImageView) view.findViewById(R.id.thumbnail),
+                                    transitionName)
+
+                            .toBundle();
+
+
+                    startActivity(
+                            new Intent(
+                                    Intent.ACTION_VIEW,
+                                    ItemsContract.Items.buildItemUri(
+                                            getItemId(vh.getAdapterPosition()))),
+                                            bundle);
                 }
             });
             return vh;
@@ -172,6 +198,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         public DynamicHeightNetworkImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
+
 
         public ViewHolder(View view) {
             super(view);
