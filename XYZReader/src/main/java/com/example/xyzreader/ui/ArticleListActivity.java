@@ -171,23 +171,20 @@ public class ArticleListActivity extends AppCompatActivity implements
                             R.string.transition_image,
                             getItemId(vh.getAdapterPosition()));
                     mSentTransitionName = transitionName;
-                    Log.d("grmblpfmf1", transitionName);
 
-                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation
-                            (ArticleListActivity.this,
-                                    (ImageView) view.findViewById(R.id.thumbnail),
-                                    transitionName)
-
-                            .toBundle();
+                    ActivityOptionsCompat activityOptionsCompat =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation
+                                (ArticleListActivity.this,
+                                (ImageView) view.findViewById(R.id.thumbnail),
+                                transitionName);
 
                     startActivityForResult(
-
                             new Intent(
                                     Intent.ACTION_VIEW,
                                     ItemsContract.Items.buildItemUri(
                                             getItemId(vh.getAdapterPosition()))),
-                            1,
-                                                bundle);
+                                    1,
+                                    activityOptionsCompat.toBundle());
                 }
             });
             return vh;
