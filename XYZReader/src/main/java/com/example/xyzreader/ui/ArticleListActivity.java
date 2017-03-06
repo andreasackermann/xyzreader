@@ -84,6 +84,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                     if (mRcvTransitionName != null && !mRcvTransitionName.equals(mSentTransitionName)) {
                         names.clear();
                         sharedElements.clear();
+
+                        names.add(mRcvTransitionName);
+                        sharedElements.put(mRcvTransitionName, mRecyclerView.findViewWithTag(mRcvTransitionName));
+
                         Log.d("grmblpfmf6", "mRcvTransitionName=" + mRcvTransitionName + " ,mSentTransitionName=" + mSentTransitionName + " do not match");
                         mRcvTransitionName = null;
                     }
@@ -206,6 +210,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+            holder.thumbnailView.setTag(getResources().getString(R.string.transition_image, getItemId(position)));
         }
 
         @Override
