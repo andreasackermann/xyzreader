@@ -1,9 +1,9 @@
 package com.example.xyzreader.ui;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
-import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -12,15 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.widget.ImageView;
 
 import com.example.xyzreader.R;
@@ -39,13 +36,34 @@ public class ArticleDetailActivity extends AppCompatActivity
     private Cursor mCursor;
     private long mStartId;
 
+    private static final String LOG_TAG = ArticleDetailActivity.class.getName();
+
+    static final String KEY_IS_RETURNING = "isReturning";
+
+    static final String KEY_TRANSITION_NAME = "transitionName";
+
     private long mSelectedItemId;
-    private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
-    private int mTopInset;
+//    private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
+//    private int mTopInset;
+
+    private ImageView mImageView = null;
+
+    private boolean mIsReturning = false;
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
 
+
+    @Override
+    public void onBackPressed() {
+        // Let us pass back the current picture's transition name to list acty
+        Intent intent = new Intent();
+        intent.putExtra(ArticleDetailActivity.KEY_IS_RETURNING, true);
+        mIsReturning = true;
+        intent.putExtra(ArticleDetailActivity.KEY_TRANSITION_NAME, (String)mImageView.getTag());
+        setResult(Activity.RESULT_OK, intent);
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +105,23 @@ public class ArticleDetailActivity extends AppCompatActivity
                 mSelectedItemId = mStartId;
             }
         }
+
+        setEnterSharedElementCallback(new android.support.v4.app.SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                if (mIsReturning) {
+                    mIsReturning = false;
+                    names.clear();
+                    sharedElements.clear();
+
+                    if (mImageView != null) {
+                        String tag = (String) mImageView.getTag();
+                        names.add(tag);
+                        sharedElements.put(tag, mImageView);
+                    }
+                }
+             }
+        });
     }
 
     @Override
@@ -116,11 +151,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        finishAfterTransition();
-//    }
-
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
@@ -136,9 +166,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             ArticleDetailFragment fragment = (ArticleDetailFragment) object;
-//            if (fragment != null) {
-//                mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
-//            }
+            if (fragment != null) {
+                ArticleDetailActivity.this.mImageView = fragment.getmPhotoView();
+                // mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
+            }
         }
 
         @Override

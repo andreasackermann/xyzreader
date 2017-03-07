@@ -8,14 +8,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,14 +19,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,7 +39,7 @@ import com.example.xyzreader.data.ArticleLoader;
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = "ArticleDetailFragment";
+    private static final String LOG_TAG = ArticleDetailFragment.class.getName();
 
     public static final String ARG_ITEM_ID = "item_id";
     private static final float PARALLAX_FACTOR = 1.25f;
@@ -62,6 +54,11 @@ public class ArticleDetailFragment extends Fragment implements
 
     private int mTopInset;
     private View mPhotoContainerView;
+
+    public ImageView getmPhotoView() {
+        return mPhotoView;
+    }
+
     private ImageView mPhotoView;
     private int mScrollY;
     private boolean mIsCard = false;
@@ -90,7 +87,7 @@ public class ArticleDetailFragment extends Fragment implements
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
-
+        Log.d(LOG_TAG, "onCreate mItemId=" + mItemId);
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
@@ -142,20 +139,16 @@ public class ArticleDetailFragment extends Fragment implements
         acty.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         final String transitionName = getResources().getString(R.string.transition_image, mItemId);
+        mPhotoView.setTag(transitionName);
+
         supportActionBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // todo pass current image back to list?
-                Intent intent = new Intent();
-                intent.putExtra("isReturning", true);
-                intent.putExtra("transitionName", transitionName);
-                getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().onBackPressed();
             }
         });
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Log.d("grmblpfmf2", transitionName);
             ViewCompat.setTransitionName(mPhotoView, transitionName);
 
         }
@@ -236,9 +229,6 @@ public class ArticleDetailFragment extends Fragment implements
                                     }
                                 });
 
-
-
-
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
                                 updateStatusBar();
@@ -274,7 +264,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mCursor = cursor;
         if (mCursor != null && !mCursor.moveToFirst()) {
-            Log.e(TAG, "Error reading item detail cursor");
+            Log.e(LOG_TAG, "Error reading item detail cursor");
             mCursor.close();
             mCursor = null;
         }

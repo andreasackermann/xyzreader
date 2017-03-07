@@ -48,11 +48,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
-        Log.d("grmblfpfmf9", "reenter");
         if (resultCode == RESULT_OK) {
-            mIsReturning = data.getBooleanExtra("isReturning", false);
-            mRcvTransitionName = data.getStringExtra("transitionName");
-            Log.d("grmblpfmf8", "onActivityReenter: mIsReturning=" + mIsReturning + " ,mRcvTransitionName=" + mRcvTransitionName);
+            mIsReturning = data.getBooleanExtra(ArticleDetailActivity.KEY_IS_RETURNING, false);
+            mRcvTransitionName = data.getStringExtra(ArticleDetailActivity.KEY_TRANSITION_NAME);
         }
         super.onActivityReenter(resultCode, data);
     }
@@ -78,21 +76,20 @@ public class ArticleListActivity extends AppCompatActivity implements
         setExitSharedElementCallback(new SharedElementCallback() {
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                Log.d("grmblpfmf7", "mIsReturning=" + mIsReturning + " ,mRcvTransitionName=" + mRcvTransitionName + " ,mSentTransitionName=" + mSentTransitionName);
                 if (mIsReturning) {
                     mIsReturning = false;
                     if (mRcvTransitionName != null && !mRcvTransitionName.equals(mSentTransitionName)) {
                         names.clear();
                         sharedElements.clear();
 
-                        names.add(mRcvTransitionName);
-                        sharedElements.put(mRcvTransitionName, mRecyclerView.findViewWithTag(mRcvTransitionName));
-
-                        Log.d("grmblpfmf6", "mRcvTransitionName=" + mRcvTransitionName + " ,mSentTransitionName=" + mSentTransitionName + " do not match");
+                        View view = mRecyclerView.findViewWithTag(mRcvTransitionName);
+                        if (view != null) {
+                            names.add(mRcvTransitionName);
+                            sharedElements.put(mRcvTransitionName, view);
+                        }
                         mRcvTransitionName = null;
                     }
                 }
-
             }
         });
     }
