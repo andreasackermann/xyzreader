@@ -39,6 +39,8 @@ import java.util.Map;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = ArticleListActivity.class.getName();
+
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -86,6 +88,8 @@ public class ArticleListActivity extends AppCompatActivity implements
                         if (view != null) {
                             names.add(mRcvTransitionName);
                             sharedElements.put(mRcvTransitionName, view);
+                        } else {
+                            Log.w(LOG_TAG, "Thumbnail for " + mRcvTransitionName + " unavailable (not preloaded)");
                         }
                         mRcvTransitionName = null;
                     }
