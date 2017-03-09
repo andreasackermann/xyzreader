@@ -80,6 +80,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         setExitSharedElementCallback(new SharedElementCallback() {
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                // mechanism inspired by this example project:
+                // https://github.com/alexjlockwood/adp-activity-transitions
                 if (mIsReturning) {
                     mIsReturning = false;
                     if (mRcvTransitionName != null && !mRcvTransitionName.equals(mSentTransitionName)) {
