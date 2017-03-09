@@ -10,4 +10,6 @@
     <string name="up">Up</string>
 
     <string name="transition_image" translatable="false">transition_image_%1$d</string>
+
+    <string name="warn_offline">Please check your internet connection!</string>
 </resources>

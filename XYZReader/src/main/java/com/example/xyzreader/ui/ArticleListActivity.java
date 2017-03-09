@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,7 +38,7 @@ import java.util.Map;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String LOG_TAG = ArticleListActivity.class.getName();
 
@@ -67,6 +68,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
@@ -121,11 +123,23 @@ public class ArticleListActivity extends AppCompatActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
-                updateRefreshingUI();
+                if (intent.getBooleanExtra(UpdaterService.EXTRA_OFFLINE, false)) {
+                    Snackbar snackbar = Snackbar
+                            .make(mRecyclerView, getResources().getString(R.string.warn_offline), Snackbar.LENGTH_LONG);
+
+                    snackbar.show();
+                } else {
+                    mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                    updateRefreshingUI();
+                }
             }
         }
     };
+
+    @Override
+    public void onRefresh() {
+        refresh();
+    }
 
     private void updateRefreshingUI() {
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
