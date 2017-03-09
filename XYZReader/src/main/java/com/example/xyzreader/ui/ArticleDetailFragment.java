@@ -1,13 +1,11 @@
 package com.example.xyzreader.ui;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -42,13 +40,11 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String LOG_TAG = ArticleDetailFragment.class.getName();
 
     public static final String ARG_ITEM_ID = "item_id";
-    private static final float PARALLAX_FACTOR = 1.25f;
 
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
-    private ColorDrawable mStatusBarColorDrawable;
 
     public ImageView getmPhotoView() {
         return mPhotoView;
@@ -56,7 +52,6 @@ public class ArticleDetailFragment extends Fragment implements
 
     private ImageView mPhotoView;
     private int mScrollY;
-    private int mStatusBarFullOpacityBottom;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,7 +77,7 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
         Log.d(LOG_TAG, "onCreate mItemId=" + mItemId);
-        mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
+        int mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
     }
@@ -110,7 +105,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
-        mStatusBarColorDrawable = new ColorDrawable(0);
+        ColorDrawable mStatusBarColorDrawable = new ColorDrawable(0);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override

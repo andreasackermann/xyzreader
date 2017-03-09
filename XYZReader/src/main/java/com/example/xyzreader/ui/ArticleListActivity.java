@@ -42,7 +42,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private static final String LOG_TAG = ArticleListActivity.class.getName();
 
-    private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private boolean mIsReturning = false;
@@ -63,7 +62,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
