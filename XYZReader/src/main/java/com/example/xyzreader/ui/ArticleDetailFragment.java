@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewGroupCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -103,6 +105,10 @@ public class ArticleDetailFragment extends Fragment implements
         Log.d(LOG_TAG, "onCreateView");
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
+        // need to do that as long texts might crash on hardware devices otherwise
+        ViewGroup scrollView = (NestedScrollView) mRootView.findViewById(R.id.scroll_view);
+        ViewGroupCompat.setTransitionGroup(scrollView, true);
+
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
 
         ColorDrawable mStatusBarColorDrawable = new ColorDrawable(0);
@@ -190,9 +196,6 @@ public class ArticleDetailFragment extends Fragment implements
 
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mMutedColor);
-                            } else {
-                                Log.e(LOG_TAG, "couldn't load image from " + imageContainer.getRequestUrl());
-                                ActivityCompat.startPostponedEnterTransition(getActivity());
                             }
                         }
 

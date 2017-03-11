@@ -13,11 +13,12 @@
 
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/overlap_top"
-        android:elevation="6dp">
+        app:elevation="6dp">
             <com.example.xyzreader.ui.MaxWidthLinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -70,26 +71,26 @@
                     android:textColor="@color/textColor"
                     android:textColorLink="@color/theme_accent"
                     android:textSize="@dimen/detail_body_text_size"
-                    android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier" />
+                    android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+                    />
 
             </com.example.xyzreader.ui.MaxWidthLinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="4dp">
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll">
-
             <ImageView
                 android:id="@+id/photo"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/detail_photo_height"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
-
             <include layout="@layout/toolbar_detail"></include>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -103,8 +104,6 @@
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_share"
         app:elevation="6dp"/>
-
-
 
 </android.support.design.widget.CoordinatorLayout>
 
